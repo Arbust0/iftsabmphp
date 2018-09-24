@@ -1,0 +1,35 @@
+{% extends 'layout.html' %}
+{% block content %}
+{% from 'helpers/_formHelper.html' import render_field %}
+
+<div class="table-responsive">
+    <h1> Usuario: {{ current_user.username }}</h1>
+
+
+    <table class="table table-hover manage-u-table">
+        <thead>
+            <tr>
+                <th>Email</th>
+                <th>Ultima lista creada</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% if tarea %}
+            <tr>
+                <td>
+                    {{ tarea.user.email }}
+                </td>
+                <td>
+                    {{ tarea.name }}
+                </td>
+            </tr>
+            {% else %}
+            <tr>
+                <td>{{ current_user.username }}</td>
+                <td>No existen tareas</td>
+            </tr>
+            {% endif %}
+      </table>
+</div>
+
+{% endblock %}
