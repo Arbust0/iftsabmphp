@@ -1,0 +1,72 @@
+.white-box {
+    margin: 0;
+}
+.login-sidebar {
+    position: static;
+    right: auto;
+}
+.login-register .error{
+    color: red;
+}
+.botonera{
+    width: 100%;
+}
+ul.botonera li {
+    display: inline-block;
+    list-style: none;
+    margin-right: 50px;
+}
+.glyphicon {
+    top: 5px;
+    right: 1px;
+}
+nav.navbar {
+    height: 50px;
+    border-radius: 0px;
+    border: none;
+    background: rgba(73,155,234,1);
+    background: -moz-linear-gradient(left, rgba(73,155,234,1) 0%, rgba(32,124,229,1) 100%);
+    background: -webkit-gradient(left top, right top, color-stop(0%, rgba(73,155,234,1)), color-stop(100%, rgba(32,124,229,1)));
+    background: -webkit-linear-gradient(left, rgba(73,155,234,1) 0%, rgba(32,124,229,1) 100%);
+    background: -o-linear-gradient(left, rgba(73,155,234,1) 0%, rgba(32,124,229,1) 100%);
+    background: -ms-linear-gradient(left, rgba(73,155,234,1) 0%, rgba(32,124,229,1) 100%);
+    background: linear-gradient(to right, rgba(73,155,234,1) 0%, rgba(32,124,229,1) 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#499bea', endColorstr='#207ce5', GradientType=1 );
+}
+
+.navbar-inverse .navbar-nav > li > a{
+    color: black;
+}
+
+
+.navbar-inverse .navbar-nav > .active > a {
+    background: #00566f;
+    color: white;
+}
+
+
+.navbar-inverse .navbar-nav > .active > a:hover {
+    background:#00566f;
+    color: white;
+}
+
+.btn-primary {
+    background: rgba(73,155,234,1);
+    background: -moz-linear-gradient(left, rgba(73,155,234,1) 0%, rgba(32,124,229,1) 100%);
+    background: -webkit-gradient(left top, right top, color-stop(0%, rgba(73,155,234,1)), color-stop(100%, rgba(32,124,229,1)));
+    background: -webkit-linear-gradient(left, rgba(73,155,234,1) 0%, rgba(32,124,229,1) 100%);
+    background: -o-linear-gradient(left, rgba(73,155,234,1) 0%, rgba(32,124,229,1) 100%);
+    background: -ms-linear-gradient(left, rgba(73,155,234,1) 0%, rgba(32,124,229,1) 100%);
+    background: linear-gradient(to right, rgba(73,155,234,1) 0%, rgba(32,124,229,1) 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#499bea', endColorstr='#207ce5', GradientType=1 );
+}
+
+
+.btn-primary:hover {
+    background: rgb(19, 97, 187);
+}
+
+.btn-primary:active:hover {
+    background-color: rgb(19, 97, 187);
+    border: 1px solid rgb(19, 97, 187);
+}
