@@ -1,0 +1,62 @@
+{% extends 'layout.html' %}
+{% from 'helpers/_formHelper.html' import render_field %}
+{% block content %}
+
+
+
+
+<section id="wrapper" class="login-register">
+    <div class="login-box login-sidebar">
+        <div class="white-box">
+            <form class="form-horizontal form-material" id="loginform" action="{{ url_for('registry') }}" method="POST">
+               
+                <h3 class="box-title m-t-40 m-b-0 text-center">Registrate ahora</h3>
+                {% if wrong_username %}
+                <div class="panel-heading text-center">
+                    <strong class="error"> {{ wrong_username }}</strong>
+                </div>
+                {% endif %}
+                <div class="form-group m-t-20">
+                    <div class="col-xs-12">
+                        {{render_field(form.username, class="form-control", placeholder="Username")}}
+                    </div>
+                </div>
+                <div class="form-group ">
+                    <div class="col-xs-12">
+                        {{render_field(form.email, class="form-control", placeholder="Email")}}
+                    </div>
+                </div>
+                <div class="form-group ">
+                    <div class="col-xs-12">
+                        {{render_field(form.password, class="form-control", placeholder="Clave")}}
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-xs-12">
+                        {{render_field(form.confirm, class="form-control", placeholder="Confirmar Clave")}}
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-12">
+                        <div class="checkbox checkbox-primary p-t-0">
+                            <input id="checkbox-signup" type="checkbox">
+                            <label for="checkbox-signup"> Acepto todos <a href="#">Terminos</a></label>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group text-center m-t-20">
+                    <div class="col-xs-12">
+                        <button class="btn btn-info btn-lg btn-block text-uppercase waves-effect waves-light" type="submit">Registrate</button>
+                    </div>
+                </div>
+                <div class="form-group m-b-0">
+                    <div class="col-sm-12 text-center">
+                        <p>Ya tenes una cuenta? <a href="{{ url_for('login') }}" class="text-primary m-l-5"><b>Logeate</b></a></p>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+
+{% endblock %}
