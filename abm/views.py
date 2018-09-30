@@ -1,6 +1,6 @@
 from datetime import datetime
 from flask import request, render_template, redirect, url_for
-import  forms, models
+import  cerveceria.iftsflama.abm.forms as forms , cerveceria.iftsflama.abm.models as models
 from __init__ import app
 from flask_login import LoginManager, \
                         UserMixin, login_required,\
@@ -281,10 +281,64 @@ def profile(username):
 def logout():
     logout_user()
     return redirect(url_for('home'))
+#-------PROVEDORES----------------
+@app.route('/cargar-provedor', methods=['GET', 'POST'])
+def cargar_provedor():
+    """
+        carga provedores
+        No es posible cargar el mismo provedor 
+        falta obligar a que se ponga el nombre con la priemra en mayuscula
+        y todo en minuscula
+    """
+    form = forms.CargarProvedor(request.form)
+    if request.method == 'POST' and form.validate():
+        res=models.db.session.query(models.Provedor).filter_by(nombre=form.nombre.data)
+        if not res=="":
+            return redirect(url_for('cargar_provedor'))
+        nuevo_provedor=models.Provedor(
+            nombre = form.nombre.data,
+            direccion = form.direccion.data,
+            telefono = form.telefono.data,
+            email = form.email.data)
+        models.db.session.add(nuevo_provedor)
+        models.db.session.commit()
+        return redirect(url_for('cargar_provedor'))
+    return render_template("cargar_provedor.html",form=form)
 
+@app.route('/provedores',methods=['GET','POST'])
+def ver_provedores():
+    """
+        lista todos los provedores
+    """
+    provedores=models.Provedor.query.order_by(models.Provedor.id.asc()).all()
+    return render_template("provedores.html",provedores=provedores)
 
+@app.route('/provedor/<int:id_provedor>/editar',methods=['GET','POST'])
+def modificar_provedor(id_provedor):
+    """
+        Modifica los provedores
+    """
+    form = forms.CargarProvedor(request.form)
+    provedor = models.Provedor.query.get(id_provedor)
+    if request.method == 'POST' and form.validate():
+        provedor.nombre = form.nombre.data
+        provedor.telefono = form.telefono.data
+        provedor.direccion = form.direccion.data
+        provedor.email = form.email.data
+        models.db.session.commit()
+        return redirect(url_for('ver_provedores'))
+    else:
+        form.nombre.data = provedor.nombre
+        form.telefono.data = provedor.telefono
+        form.direccion.data = provedor.direccion
+        form.email.data = provedor.email
+    return render_template('cargar_provedor.html',form=form,provedor=id_provedor)
+    
+
+#-----------FIN PROVEDORES---------------
 @app.errorhandler(401)
 def custom_401(error):
+    
     return redirect(url_for('login'))
 
 

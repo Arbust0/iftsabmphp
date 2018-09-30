@@ -8,7 +8,7 @@ from flask_script import Manager
 from flask_migrate import Migrate, MigrateCommand
 
 #app = Flask(__name__) # Descomentar para migrar
-config = 'postgresql://postgres:Kami12345@localhost/todolist'
+config = 'postgresql://postgres:sebast@localhost/cerveceria'
 
 app.config['SQLALCHEMY_DATABASE_URI'] = config
 
@@ -108,6 +108,13 @@ class Task(db.Model):
 
     list = db.relationship('TaskList', back_populates='tasks')
 
+class Provedor(db.Model):
+    __tablename__ = 'provedor'
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    nombre = db.Column(db.String)
+    direccion = db.Column(db.String)
+    telefono = db.Column(db.String)
+    email = db.Column(db.String)
 
 if __name__ == '__main__':
     manager.run()
