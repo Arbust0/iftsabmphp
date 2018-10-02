@@ -1,0 +1,56 @@
+{% extends 'layout.html' %}
+{% block content %}
+        <div class="table-responsive">
+            {% if tarea %}
+            <h1> Lista: {{ tarea.name }}</h1>
+            <h3> Fecha: {{ tarea.date.strftime('%d/%m/%Y') }}</h3>
+            <ul class="botonera">
+                <li><a href="{{ url_for('eliminar_lista', list_id=tarea.id) }}">Eliminar lista</a></li>
+                <li><a href="{{ url_for('addtask', list_id=tarea.id) }}">Agregar una tarea a esta lista</a></li>
+                <li><a href="{{ url_for('finalizetask', list_id=tarea.id) }}">Finalizar esta lista</a></li>
+            </ul>
+            <br>
+            <br />
+            
+
+
+            <table class="table table-hover manage-u-table">
+                <thead>
+                    <tr>
+                        <th class="text-center">#</th>
+                        <th>Tarea</th>
+                        <th>Fecha</th>
+                        <th>Accion</th>
+           
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for task in tarea.tasks %}
+                    <tr>
+                        <td>{{ task.id }}</td>
+                        <td>
+                            {{ task.task }}
+                        </td>
+                        <td>
+                            {{ task.date.strftime('%d/%m/%Y') }}
+                        </td>
+
+                        <td>
+                            {% if not task.finalize %}
+                            <a href="{{ url_for('deletetask', id_tarea=task.id) }}" class="btn btn-info btn-outline btn-circle btn-lg m-r-5"><i class="glyphicon glyphicon-trash"></i></a>
+                            <a href="{{ url_for('edittask', id_tarea=task.id) }}" class="btn btn-info btn-outline btn-circle btn-lg m-r-5"><i class="glyphicon glyphicon-pencil"></i></a>
+                            <a href="{{ url_for('finalizar_tarea', id_tarea=task.id) }}" class="btn btn-info btn-outline btn-circle btn-lg m-r-5"><i class="glyphicon glyphicon-ok"></i></a>
+                            {% else %}
+                            <span>Tarea finalizada el {{ task.date_finalize.strftime('%d/%m/%Y') }}.</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% else %}
+            <p>No hay tareas que mostrar</p>
+            {% endif %}
+        </div>
+
+        {% endblock %}

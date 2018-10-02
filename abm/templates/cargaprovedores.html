@@ -1,0 +1,40 @@
+{% extends 'layout.html' %}
+{% from 'helpers/_formHelper.html' import render_field %}
+{% block content %}
+
+<section id="wrapper" class="login-register">
+    <div class="login-box login-sidebar">
+        <div class="white-box">
+            <form class="form-horizontal form-material" id="provedorform" action="{{ url_for('registry') }}" method="POST">
+                             
+                <div class="form-group m-t-20">
+                    <div class="col-xs-12">
+                        {{render_field(form.provedor, class="form-control", placeholder="Provedor")}}
+                    </div>
+                </div>
+                <div class="form-group ">
+                    <div class="col-xs-12">
+                        {{render_field(form.email, class="form-control", placeholder="Email")}}
+                    </div>
+                </div>
+                <div class="form-group ">
+                    <div class="col-xs-12">
+                        {{render_field(form.telefono, class="form-control", placeholder="Telefono")}}
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-xs-12">
+                        {{render_field(form.direccion, class="form-control", placeholder="Direccion")}}
+                    </div>
+                </div> 
+				<div class="form-group text-center m-t-20">
+                    <div class="col-xs-12">
+                        <button class="btn btn-info btn-lg btn-block text-uppercase waves-effect waves-light" type="submit">Cargar Provedor</button>
+                    </div>
+                </div>				
+            </form>
+        </div>
+    </div>
+</section>
+
+{% endblock %}

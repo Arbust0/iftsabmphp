@@ -1,0 +1,42 @@
+{% extends 'layout.html' %}
+{% from 'helpers/_formHelper.html' import render_field %}
+{% block content %}
+<div class="row">
+    <div class="col-sm-12">
+        <div class="white-box">
+            <h3 class="box-title">Tareas pendientes</h3>
+            <form action="/menu-lista-tarea" method="post">
+                <div class="col-md-4">
+                    {{render_field(form.task_list, class="form-control")}}
+                </div>
+                <input type="submit" name="Ver Tarea" value="Aceptar" />
+            </form>
+        </div>
+        <br>
+        <a href="{{ url_for('add_list') }}">Agregar nueva lista</a>
+    </div>
+</div>
+
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="white-box">
+                    <h3 class="box-title">Tareas finalizadas</h3>
+                    <p class="text-muted">A continuacion, podra ver las tareas finalizadas</p>
+                    <div class="table-responsive">
+                        <table class="table color-table primary-table">
+                            <tr>
+                                <th>Tarea</th>
+                                <th>Fecha Finalizacion</th>
+                            </tr>
+                            {% for tarea in tareasFinalizadas %}
+                            <tr>
+                                <td>{{ tarea.name }}</td>
+                                <td>{{ tarea.date_finalize.strftime('%d/%m/%Y %H:%M') }}</td>
+                            </tr>
+                            {% endfor %}
+                        </table>
+                        {% endblock %}
+                    </div>
+                </div>
+            </div>
+        </div>

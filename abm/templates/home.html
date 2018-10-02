@@ -1,0 +1,33 @@
+{% extends 'layout.html' %}
+{% block content %}
+
+<div id="wrapper" class="page-home">
+
+
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="white-box">
+                        <div class="jumbotron">
+<div class="container">    
+    
+      <h1>ToDo List</h1>
+      {% if current_user.username %}
+        <p>Bienvenido {{ current_user.username }}</p>
+      <p><a class="btn btn-primary btn-lg" href="/menu-lista-tarea" role="button">Ir a tus tareas</a></p>
+      {% else %}
+      <p>Bienvenido, continua logeando con tu usuario, o creandote uno nuevo para empezar a crear tus propias listas
+        En esta aplicacion, podes crear tus listas de tareas, y crear tareas individuales dentro de estas,
+        una vez creada la lista, podes seleccionarla para agregarle tareas, para eliminarla, o para finalizarlas
+        bloqueando cualquier cambio que le puedas hacer.
+      </p>
+      <p><a class="btn btn-primary btn-lg" href="/login" role="button">Logeate aca !</a></p>
+      {% endif %}
+    </div>
+</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endblock %}
