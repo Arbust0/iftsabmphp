@@ -1,0 +1,36 @@
+{% extends 'layout.html' %}
+{% from 'helpers/_formHelper.html' import render_field %}
+{% block content %}
+
+<div id="wrapper" class="page-home">
+    <div class="container-fluid">
+        <!-- .row -->
+        <div class="row">
+            <div class="col-md-12">
+                <div class="white-box">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="white-box">
+                                <h3 class="box-title m-b-0">Lista de tareas</h3>
+                                <p class="text-muted m-b-30 font-13"></p>
+                                <div class="row">
+                                    <div class="col-sm-12 col-xs-12">
+                                        <form method="POST">
+                                            <div class="form-group">
+                                                <label>Tarea</label>
+                                                {{render_field(form.task, class="form-control", placeholder="Ingrese la tarea")}}
+                                            </div>
+                                            <button type="submit" class="btn btn-success waves-effect waves-light m-r-10">Editar</button>
+                       
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+{% endblock %}

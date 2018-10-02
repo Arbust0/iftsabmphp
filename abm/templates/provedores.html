@@ -1,0 +1,47 @@
+{% extends 'layout.html' %}
+{% from 'helpers/_formHelper.html' import render_field %}
+{% block content %}
+<style>
+    th{ 
+        color:rgba(73,155,234,1);
+    }
+</style>
+    <div class="white-box">
+        <h3 class="box-title m-t-40 m-b-0 text-center">Provedores</h3>
+    </div>
+    <div class="col-md-12">
+        <table class="table table-hover manage-u-table">
+            <thead>
+                <tr>
+                    <th class="text-center">#</th>
+                    <th>Provedor</th>
+                    <th>Direccion</th>
+                    <th>Telefono</th>
+                    <th>Email</th>   
+                </tr>
+            </thead>
+            <tbody>
+                {% for provedor in provedores %}
+                <tr>
+                    <td>{{ provedor.id }}</td>
+                    <td>
+                        {{ provedor.nombre }}
+                    </td>
+                    <td>
+                        {{ provedor.direccion }}
+                    </td>
+                    <td>
+                        {{ provedor.telefono }}
+                    </td>
+                    <td>
+                        {{ provedor.email }}
+                    </td>
+                    <td>
+                        <a href="{{ url_for('modificar_provedor', id_provedor=provedor.id) }}" class="btn btn-info btn-outline btn-circle btn-lg m-r-5"><i class="glyphicon glyphicon-pencil"></i></a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}
