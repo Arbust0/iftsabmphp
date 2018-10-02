@@ -33,11 +33,16 @@
                 {% endif %}
                 {% if request.path == '/menu-lista-tarea' %}
                 <li class="active"><a href="{{ url_for('task_list') }}">Tareas</a></li>
+                <li><a href="{{ url_for('cargar_provedor') }}">Cargar Provedores</a></li>
+                <li><a href="{{ url_for('ver_provedores') }}">Ver Provedores</a></li>
                 {% else %}
                 <li><a href="{{ url_for('task_list') }}">Tareas</a></li>
+                <li><a href="{{ url_for('cargar_provedor') }}">Cargar Provedores</a></li>
+                <li><a href="{{ url_for('ver_provedores') }}">Ver Provedores</a></li>
                 {% endif %}
                 {% if current_user.username %}
                 <li><a href="{{ url_for('logout') }}">Logout</a></li>
+
                 {% if request.path == '/' + current_user.username + '/perfil' %}
                 <li class="active"><a href="{{ url_for('profile', username=current_user.username) }}">Perfil</a></li>
                 {% else %}

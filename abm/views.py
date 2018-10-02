@@ -1,6 +1,6 @@
 from datetime import datetime
 from flask import request, render_template, redirect, url_for
-import  cerveceria.iftsflama.abm.forms as forms , cerveceria.iftsflama.abm.models as models
+import  forms , models
 from __init__ import app
 from flask_login import LoginManager, \
                         UserMixin, login_required,\
