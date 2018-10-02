@@ -291,12 +291,13 @@ def cargar_provedor():
         y todo en minuscula
     """
     form = forms.CargarProvedor(request.form)
+    
     if request.method == 'POST' and form.validate():
-        res=models.db.session.query(models.Provedor).filter_by(nombre=form.nombre.data)
-        if not res=="":
+        res=models.db.session.query(models.Provedor).filter_by(nombre=str(form.nombre.data).capitalize()).count()
+        if not res==0:
             return redirect(url_for('cargar_provedor'))
         nuevo_provedor=models.Provedor(
-            nombre = form.nombre.data,
+            nombre = str(form.nombre.data).capitalize(),
             direccion = form.direccion.data,
             telefono = form.telefono.data,
             email = form.email.data)
