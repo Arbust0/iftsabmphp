@@ -344,6 +344,7 @@ def cargar_provedor():
         carga stock
        
     """
+    models.Provedor.query.order_by(models.Provedor.id.asc()).all()
     form = forms.CargarStock(request.form)
     
     if request.method == 'POST' and form.validate():
@@ -361,12 +362,12 @@ def cargar_provedor():
         nuevo_stock=models.Producto(
             producto = str(form.nombre.data).capitalize(),
             cantidad = form.cantidad.data,
-            provedor = request.form['provedor'],
+            provedor = request.form['idprovedor'],
            )
         models.db.session.add(nuevo_stock)
         models.db.session.commit()
         return redirect(url_for('cargar_stock'))
-    return render_template("cargar_stock.html",form=form)
+    return render_template("cargar_stock.html",form=form,provedores=provedores)
 
 @app.errorhandler(401)
 def custom_401(error):
