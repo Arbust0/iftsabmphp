@@ -46,3 +46,9 @@ class CargarProvedor(Form):
         validators.required(message='* requerido')])
     email = StringField('Email', [
         validators.required(message='* requerido')])
+
+class CargarStock(Form):
+    nombre = StringField('Nombre', [
+        validators.required(message='* requerido')])
+    cantidad = StringField('Cantidad', [
+        validators.required(message='* requerido')])
