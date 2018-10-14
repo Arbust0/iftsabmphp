@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="">
     <meta name="author" content="">
-    <title>ToDo List</title>
+    <title>Gestion Birrera</title>
     <link href="{{ url_for('static', filename='bootstrap/dist/css/bootstrap.min.css') }}" rel="stylesheet">
     <link href="{{ url_for('static', filename='css/animate.css') }}" rel="stylesheet">
     <link href="{{ url_for('static', filename='plugins/bower_components/sidebar-nav/dist/sidebar-nav.min.css') }}" rel="stylesheet">
@@ -33,11 +33,17 @@
                 {% endif %}
                 {% if request.path == '/menu-lista-tarea' %}
                 <li class="active"><a href="{{ url_for('task_list') }}">Tareas</a></li>
-                <li><a href="{{ url_for('cargar_provedor') }}">Cargar Provedores</a></li>
-                <li><a href="{{ url_for('ver_provedores') }}">Ver Provedores</a></li>
                 {% else %}
                 <li><a href="{{ url_for('task_list') }}">Tareas</a></li>
+                {% endif %}
+                {% if request.path == '/cargar-provedor' %}
+                <li class="active"><a href="{{ url_for('cargar_provedor') }}">Cargar Provedores</a></li>
+                {% else %}
                 <li><a href="{{ url_for('cargar_provedor') }}">Cargar Provedores</a></li>
+                {% endif %}
+                {% if request.path == '/provedores' %}
+                <li class="active"><a href="{{ url_for('ver_provedores') }}">Ver Provedores</a></li>
+                {% else %}
                 <li><a href="{{ url_for('ver_provedores') }}">Ver Provedores</a></li>
                 {% endif %}
                 {% if current_user.username %}

@@ -337,6 +337,61 @@ def modificar_provedor(id_provedor):
     
 
 #-----------FIN PROVEDORES---------------
+
+@app.route('/cargar-stock', methods=['GET', 'POST'])
+def cargar_stock():
+    """
+        carga stock
+       
+    """
+    models.Provedor.query.order_by(models.Provedor.id.asc()).all()
+    form = forms.CargarStock(request.form)
+    
+    if request.method == 'POST' and form.validate():
+        #verificar si ya esta el stock 
+        #res=models.db.session.query(models.Producto.nombre,models.Producto.provedor,models.Producto.cantidad,models.Provedor.id).join(models.Provedor,models.Provedor.id=models.Producto.provedor).filter(
+         #   models.Producto.nombre==form.nombre.data).count()
+        if not res==0:
+            '''
+            si esta aca se actualiza
+            suma res.cantidad a la cantidad
+            '''
+            res.cantidad=res.cantidad+form.cantidad.data
+            models.db.session.commit()
+            return redirect(url_for('cargar_stock'))
+        nuevo_stock=models.Producto(
+            producto = str(form.nombre.data).capitalize(),
+            cantidad = form.cantidad.data,
+            provedor = request.form['idprovedor'],
+           )
+        models.db.session.add(nuevo_stock)
+        models.db.session.commit()
+        return redirect(url_for('cargar_stock'))
+    return render_template("cargar_stock.html",form=form,provedores=provedores)
+
+@app.route('/productos',methods=['POST','GET'])
+def descontar():
+    form = forms.productoListForm(request.form)
+    productos = models.ProductoElaborado.query.all()
+
+    form.productos_list.choices = [
+        (producto.id, producto.nombre)
+        for producto in productos]
+
+    if request.method =='POST':
+        productoelaborado=form.productos_list.data
+        receta = models.db.session.query(models.Receta).filter(productoelaborado==productoelaborado).all()
+        for materia in receta:
+            mat=models.db.session.query(models.MateriaPrima).filter_by(id=materia.materiaprima).first()
+            mat.cantidad = mat.cantidad - materia.cantidad
+            models.db.session.commit()
+        return redirect(url_for('descontar'))
+    return render_template('productos.html',form=form)
+
+@app.route('/carta',methods=['POST','GET'])
+def carta():
+    carta = models.ProductoElaborado.query.all()
+    return render_template('carta.html',productos=carta)
 @app.errorhandler(401)
 def custom_401(error):
     
