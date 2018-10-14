@@ -52,3 +52,6 @@ class CargarStock(Form):
         validators.required(message='* requerido')])
     cantidad = StringField('Cantidad', [
         validators.required(message='* requerido')])
+
+class productoListForm(Form):
+    productos_list = SelectField('Seleccione un prroducto', coerce=int)

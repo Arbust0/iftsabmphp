@@ -3,7 +3,7 @@ from datetime import datetime
 from __init__ import app  #Comentar para migrar
 import pytz
 from flask import Flask
-from sqlalchemy import or_
+from sqlalchemy import or_ , ForeignKey
 from flask_script import Manager
 from flask_migrate import Migrate, MigrateCommand
 
@@ -115,6 +115,24 @@ class Provedor(db.Model):
     direccion = db.Column(db.String)
     telefono = db.Column(db.String)
     email = db.Column(db.String)
+
+class ProductoElaborado(db.Model):
+    __tablename__ = 'productoelaborado'
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    nombre = db.Column(db.String)
+    precio = db.Column(db.Integer)
+
+class Receta(db.Model):
+    __tablename__ = 'receta'
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    productoelaborado = db.Column(db.Integer,ForeignKey('productoelaborado.id'))
+    materiaprima = db.Column(db.Integer,ForeignKey('materiaprima.id'))
+    cantidad = db.Column(db.Integer)
+class MateriaPrima(db.Model):
+    __tablename__ = 'materiaprima'
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    nombre = db.Column(db.String)
+    cantidad = db.Column(db.Integer)
 
 if __name__ == '__main__':
     manager.run()
