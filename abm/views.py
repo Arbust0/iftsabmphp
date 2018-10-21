@@ -390,8 +390,44 @@ def descontar():
 
 @app.route('/carta',methods=['POST','GET'])
 def carta():
-    carta = models.ProductoElaborado.query.all()
+    carta = models.ProductoElaborado.query.order_by(models.ProductoElaborado.id.asc()).all()
     return render_template('carta.html',productos=carta)
+
+@app.route('/carta/<int:id_carta>/editar',methods=['GET','POST'])
+def modificar_carta(id_carta):
+    """
+        Modifica la Carta
+    """
+    form = forms.CargarCarta(request.form)
+    producto = models.ProductoElaborado.query.get(id_carta)
+    if request.method == 'POST' and form.validate():
+        producto.nombre = form.producto.data
+        producto.precio = form.precio.data
+
+        models.db.session.commit()
+        return redirect(url_for('carta'))
+    else:
+        form.producto.data = producto.nombre
+        form.precio.data = producto.precio
+
+    return render_template('cargar_carta.html',form=form,producto=str(id_carta))
+
+@app.route('/carta/agregar',methods=["POST","GET"])
+def agregar_carta():
+    form = forms.CargarCarta(request.form)
+    
+    if request.method == 'POST' and form.validate():
+        res=models.db.session.query(models.ProductoElaborado).filter_by(nombre=str(form.producto.data).capitalize()).count()
+        if not res==0:
+            return redirect(url_for('cargar_provedor'))
+        nuevo_producto=models.ProductoElaborado(
+            nombre = str(form.producto.data).capitalize(),
+            precio = form.precio.data,)
+        models.db.session.add(nuevo_producto)
+        models.db.session.commit()
+        return redirect(url_for('carta'))
+    return render_template("cargar_carta.html",form=form)
+
 @app.errorhandler(401)
 def custom_401(error):
     

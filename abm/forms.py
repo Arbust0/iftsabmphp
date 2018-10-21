@@ -1,6 +1,6 @@
 from wtforms import Form, validators, StringField, \
                     PasswordField, SubmitField,\
-                    DateField, SelectField
+                    DateField, SelectField,IntegerField
 
 
 class LoginForm(Form):
@@ -55,3 +55,10 @@ class CargarStock(Form):
 
 class productoListForm(Form):
     productos_list = SelectField('Seleccione un prroducto', coerce=int)
+
+class CargarCarta(Form):
+    producto = StringField('Producto', [
+        validators.required(message='* requerido')])
+    precio = IntegerField('Precio', [
+        validators.required(message='* requerido')])
+    

@@ -16,6 +16,9 @@
                     <th class="text-center">#</th>
                     <th>Producto</th>
                     <th>Precio</th>  
+                    <th>Editar</th>
+                    <th colspan="2">Agregar a Factura</th>
+                    <th>Unidades</th>
                 </tr>
             </thead>
             <tbody>
@@ -29,11 +32,38 @@
                         ${{ producto.precio }} 
                     </td>
                     <td>
-                        
+                        <a href="{{ url_for('modificar_carta', id_carta=producto.id) }}" class="btn btn-info btn-outline btn-circle btn-lg m-r-5"><i class="glyphicon glyphicon-pencil"></i></a>
+                    </td>
+                    <td>
+                        <a  onclick="Agregar( {{ producto.id }} )" class="btn btn-info btn-outline btn-circle btn-lg m-r-5"><i class="glyphicon glyphicon-plus"></i></a>
+                    </td>
+                    <td>
+                            <a  onclick="Descontar( {{ producto.id }} )" class="btn btn-info btn-outline btn-circle btn-lg m-r-5"><i class="glyphicon glyphicon-minus"></i></a>
+                        </td>
+                    <td id="unidad{{ producto.id }}">
+                        0
                     </td>
                 </tr>
                 {% endfor %}
             </tbody>
         </table>
     </div>
+    <script>
+        function Agregar(numero){
+            id='unidad'+numero
+            valor = parseInt(document.getElementById(id).textContent);
+            valor ++;
+            document.getElementById(id).textContent = valor ;
+        }
+    </script>
+    <script>
+        function Descontar(numero){
+            id='unidad'+numero
+            valor = parseInt(document.getElementById(id).textContent);
+            valor --;
+            if(valor < 0)
+                valor=0;
+            document.getElementById(id).textContent = valor ;
+        }
+    </script>
 {% endblock %}
