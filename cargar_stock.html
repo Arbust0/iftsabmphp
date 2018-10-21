@@ -1,0 +1,30 @@
+{% extends 'layout.html' %}
+{% from 'helpers/_formHelper.html' import render_field %}
+{% block content %}
+
+<section id="wrapper" class="login-register">
+    <div class="login-box login-sidebar">
+        <div class="white-box">
+            <form class="form-horizontal form-material" id="stockform" action="{{ url_for('apuntaralstock) }}" method="POST">
+                             
+                <div class="form-group m-t-20">
+                    <div class="col-xs-12">
+                        {{render_field(form.nombre, class="form-control", placeholder="Nombre")}}
+                    </div>
+                </div>
+                <div class="form-group ">
+                    <div class="col-xs-12">
+                        {{render_field(form.cantidad, class="form-control", placeholder="Cantidad")}}
+                    </div>
+                </div>
+				<div class="form-group text-center m-t-20">
+                    <div class="col-xs-12">
+                        <button class="btn btn-info btn-lg btn-block text-uppercase waves-effect waves-light" type="submit">Cargar Stock</button>
+                    </div>
+                </div>				
+            </form>
+        </div>
+    </div>
+</section>
+
+{% endblock %}
