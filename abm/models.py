@@ -121,6 +121,8 @@ class ProductoElaborado(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     nombre = db.Column(db.String)
     precio = db.Column(db.Integer)
+    cant_ingrediente= db.Column(db.Integer)
+
 
 class Receta(db.Model):
     __tablename__ = 'receta'
@@ -133,6 +135,11 @@ class MateriaPrima(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     nombre = db.Column(db.String)
     cantidad = db.Column(db.Integer)
+    unidad = db.Column(db.String(2))
+    
+    def listar():
+        materiaprima = MateriaPrima.query.order_by(MateriaPrima.id.asc()).all()
+        return materiaprima
 
 if __name__ == '__main__':
     manager.run()

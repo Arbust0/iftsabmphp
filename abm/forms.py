@@ -48,8 +48,7 @@ class CargarProvedor(Form):
         validators.required(message='* requerido')])
 
 class CargarStock(Form):
-    nombre = StringField('Nombre', [
-        validators.required(message='* requerido')])
+    nombre = SelectField('Seleccione un provedor', coerce=int)
     cantidad = StringField('Cantidad', [
         validators.required(message='* requerido')])
 
@@ -61,4 +60,19 @@ class CargarCarta(Form):
         validators.required(message='* requerido')])
     precio = IntegerField('Precio', [
         validators.required(message='* requerido')])
-    
+    cantingredientes = IntegerField('Cantidad de Ingredientes', [
+        validators.required(message='* requerido')])
+
+class CargarReceta(Form):
+    materiaprima = SelectField('Seleccione un prroducto', coerce=int)
+    cantidad = IntegerField('cantidad', [
+        validators.required(message='* requerido')])
+class CargarMateriaPrima(Form):
+    materiaprima = StringField('Materia Prima',[
+        validators.required(message= '* requerido')
+    ])
+    unidad = StringField('Unidad',[
+        validators.required(message= '* requerido'),
+        validators.length(max=2)
+    ])
+   
