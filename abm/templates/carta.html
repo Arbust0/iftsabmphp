@@ -10,6 +10,7 @@
         <h3 class="box-title m-t-40 m-b-0 text-center">Carta</h3>
     </div>
     <div class="col-md-12">
+        <form action="" method="POST">
         <table class="table table-hover manage-u-table">
             <thead>
                 <tr>
@@ -17,6 +18,7 @@
                     <th>Producto</th>
                     <th>Precio</th>  
                     <th>Editar</th>
+                    <th>Agregar receta</th>
                     <th colspan="2">Agregar a Factura</th>
                     <th>Unidades</th>
                 </tr>
@@ -24,15 +26,22 @@
             <tbody>
                 {% for producto in productos %}
                 <tr>
-                    <td>{{ producto.id }}</td>
+                    <td>{{ producto.id }}
+                        <input type="hidden" value="{{ producto.id }}"name="{{ producto.id }}"/>
+                    </td>
                     <td>
                         {{ producto.nombre }}
+                        <input type="hidden" value="{{ producto.nombre }}" name="producto{{ producto.id }}"/>
                     </td>
                     <td>
                         ${{ producto.precio }} 
+                        <input type="hidden" value="{{ producto.precio }}" name="precio{{ producto.id }}"/>
                     </td>
                     <td>
                         <a href="{{ url_for('modificar_carta', id_carta=producto.id) }}" class="btn btn-info btn-outline btn-circle btn-lg m-r-5"><i class="glyphicon glyphicon-pencil"></i></a>
+                    </td>
+                    <td>
+                            <a href="{{ url_for('agregar_receta', id=producto.id ) }}" class="btn btn-info btn-outline btn-circle btn-lg m-r-5"><i class="glyphicon glyphicon-pencil"></i></a>
                     </td>
                     <td>
                         <a  onclick="Agregar( {{ producto.id }} )" class="btn btn-info btn-outline btn-circle btn-lg m-r-5"><i class="glyphicon glyphicon-plus"></i></a>
@@ -43,27 +52,38 @@
                     <td id="unidad{{ producto.id }}">
                         0
                     </td>
+                    <input type="hidden" value="0" name="unidad{{ producto.id }}" id="unidado{{ producto.id }}"/>
                 </tr>
                 {% endfor %}
             </tbody>
         </table>
+        
+            <center>
+                <button class="btn btn-info  text-uppercase waves-effect waves-light" style="margin-bottom: 1% "  type="submit">Hacer Pedido</button>
+            </center>
+        </form>
     </div>
+    
     <script>
         function Agregar(numero){
             id='unidad'+numero
+            id2='unidado'+numero
             valor = parseInt(document.getElementById(id).textContent);
             valor ++;
-            document.getElementById(id).textContent = valor ;
+            document.getElementById(id).textContent = valor ; 
+            document.getElementById(id2).value = valor
         }
     </script>
     <script>
         function Descontar(numero){
             id='unidad'+numero
+            id2='unidado'+numero
             valor = parseInt(document.getElementById(id).textContent);
             valor --;
             if(valor < 0)
                 valor=0;
             document.getElementById(id).textContent = valor ;
+            document.getElementById(id2).value = valor
         }
     </script>
 {% endblock %}

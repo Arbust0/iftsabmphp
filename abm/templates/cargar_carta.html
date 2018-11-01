@@ -4,11 +4,17 @@
 <section id="wrapper" class="login-register">
     <div class="login-box login-sidebar">
         <div class="white-box">
+    
             <form class="form-horizontal form-material" name="cargarcarta" id="cartaform" {% if producto %} action="{{ url_for('modificar_carta',id_carta=producto) }}" {% else %} action="{{ url_for('agregar_carta') }}" {% endif %} method="POST">
                 <h3 class="box-title m-t-40 m-b-0 text-center">Cargar Carta</h3>
                 <div class="form-group m-t-20">
                     <div class="col-xs-12">
                         {{render_field(form.producto, class="form-control", placeholder="Producto")}}
+                    </div>
+                </div>
+                <div class="form-group ">
+                    <div class="col-xs-12">
+                        {{render_field(form.cantingredientes, class="form-control", placeholder="Cantidad de Ingredintes")}}
                     </div>
                 </div>
                 <div class="form-group ">

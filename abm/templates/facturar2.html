@@ -1,0 +1,70 @@
+{% extends 'layout.html' %}
+{% from 'helpers/_formHelper.html' import render_field %}
+
+{% block content %}
+
+<style>
+    th{ 
+        color:rgba(73,155,234,1);
+    }
+</style>
+
+    <div class="white-box">
+        <h3 class="box-title m-t-40 m-b-0 text-center">Factura</h3>
+        <h4 class="h6">{{ fecha }}</h4>
+    </div>
+    <div class="col-md-12">
+        <form action="" method="POST">
+        <table class="table table-hover manage-u-table">
+            <thead>
+                <tr>
+                    <th class="text-center">#</th>
+                    <th>Producto</th>
+                    <th>Precio</th>  
+                    <th>Cantidad</th>
+                    <th>Total</th>
+                </tr>
+            </thead>
+            <tbody>
+                
+                {% for producto in productos_a_facturar %}
+                <tr>
+                    <td>{{ producto.id }}
+                        <input type="hidden" value="{{ producto.id }}"name="{{ producto.id }}"/>
+                    </td>
+                    <td>
+                        {{ producto.nombre }}
+                        <input type="hidden" value="{{ producto.nombre }}" name="producto{{ producto.id }}"/>
+                    </td>
+                    <td>
+                        ${{ producto.precio }} 
+                        <input type="hidden" value="{{ producto.precio }}" name="precio{{ producto.id }}"/>
+                    </td>
+                    <td id="unidad{{ producto.id }}">
+                            
+                       {{ unidad[producto.id] }}
+                    </td>
+                </tr>
+                
+                {% endfor %}
+            </tbody>
+            <tr >
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td style="background-color: rgba(73,155,234,1); color: white;text-align: center" >
+                   ${{ total }}
+                </td>
+            </tr>
+        </table>
+        
+            <center>
+                <button class="btn btn-info  text-uppercase waves-effect waves-light" style="margin-bottom: 1% "  type="submit">Facturar</button>
+            </center>
+        </form>
+    </div>
+<script>
+   
+</script>
+{% endblock %}

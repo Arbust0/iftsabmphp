@@ -344,9 +344,12 @@ def cargar_stock():
         carga stock
        
     """
-    models.Provedor.query.order_by(models.Provedor.id.asc()).all()
+    provedores=models.Provedor.query.order_by(models.Provedor.id.asc()).all()
     form = forms.CargarStock(request.form)
-    
+    form.nombre.choices = [
+        (provedor.id, provedor.nombre)
+        for provedor in provedores]
+
     if request.method == 'POST' and form.validate():
         #verificar si ya esta el stock 
         #res=models.db.session.query(models.Producto.nombre,models.Producto.provedor,models.Producto.cantidad,models.Provedor.id).join(models.Provedor,models.Provedor.id=models.Producto.provedor).filter(
@@ -369,6 +372,11 @@ def cargar_stock():
         return redirect(url_for('cargar_stock'))
     return render_template("cargar_stock.html",form=form,provedores=provedores)
 
+@app.route('/stock', methods=['GET', 'POST'])
+def ver_stock():
+    materiaprima = models.MateriaPrima.listar()
+    return render_template('stock.html',materiaprima=materiaprima)
+
 @app.route('/productos',methods=['POST','GET'])
 def descontar():
     form = forms.productoListForm(request.form)
@@ -390,7 +398,17 @@ def descontar():
 
 @app.route('/carta',methods=['POST','GET'])
 def carta():
+    productos=''
+    unidad=''
     carta = models.ProductoElaborado.query.order_by(models.ProductoElaborado.id.asc()).all()
+    if request.method == "POST":
+        for producto in carta:
+            unidades='unidad'+str(producto.id)
+            if int(request.form[unidades]) > 0:
+                productos=productos+str(producto.id)+","
+                unidad=unidad+str(producto.id)+":"+request.form[unidades]+";"
+        if len(productos) > 0:
+            return redirect(url_for('facturar',productos=productos,unidades=unidad))               
     return render_template('carta.html',productos=carta)
 
 @app.route('/carta/<int:id_carta>/editar',methods=['GET','POST'])
@@ -403,12 +421,13 @@ def modificar_carta(id_carta):
     if request.method == 'POST' and form.validate():
         producto.nombre = form.producto.data
         producto.precio = form.precio.data
-
+        producto.cant_ingrediente = form.cantingredientes.data
         models.db.session.commit()
         return redirect(url_for('carta'))
     else:
         form.producto.data = producto.nombre
         form.precio.data = producto.precio
+        form.cantingredientes.data = producto.cant_ingrediente
 
     return render_template('cargar_carta.html',form=form,producto=str(id_carta))
 
@@ -422,11 +441,72 @@ def agregar_carta():
             return redirect(url_for('cargar_provedor'))
         nuevo_producto=models.ProductoElaborado(
             nombre = str(form.producto.data).capitalize(),
-            precio = form.precio.data,)
+            precio = form.precio.data,
+            cant_ingrediente = form.cantingredientes.data,)
         models.db.session.add(nuevo_producto)
         models.db.session.commit()
         return redirect(url_for('carta'))
     return render_template("cargar_carta.html",form=form)
+
+@app.route('/receta/<int:id>/agregar',methods=["POST","GET"])
+def agregar_receta(id):
+    form = forms.CargarReceta(request.form)
+    productoelaborado = models.ProductoElaborado.query.get(id)
+    materiaprima=models.MateriaPrima.query.all()
+    form.materiaprima.choices = [
+        (producto.id, producto.nombre)
+        for producto in materiaprima]
+    if request.method == 'POST' and form.validate():
+        res = models.Receta.query.filter_by(productoelaborado=id,materiaprima=form.materiaprima.data).count()
+        if res > 0:
+            return  render_template('cargar_receta.html',form=form,productoelaborado=productoelaborado,mensaje2=True)
+        nueva_receta = models.Receta(
+            productoelaborado = id,
+            materiaprima = form.materiaprima.data,
+            cantidad = form.cantidad.data
+            ) 
+        models.db.session.add(nueva_receta)
+        models.db.session.commit()
+        
+        return render_template('cargar_receta.html',form=form,productoelaborado=productoelaborado,mensaje=True)
+
+    return render_template('cargar_receta.html',form=form,productoelaborado=productoelaborado)
+
+@app.route('/materia_prima/agregar',methods=["POST","GET"])
+def agregar_materia_prima():
+    
+    form = forms.CargarMateriaPrima(request.form)
+    if request.method == 'POST' and form.validate():
+        res=models.db.session.query(models.MateriaPrima).filter_by(nombre=str(form.materiaprima.data).capitalize()).count()
+        if not res==0:
+            return "<script> alert('Ya existe el producto');location.href ='/stock';</script>"
+        nueva_materia = models.MateriaPrima(
+            nombre = str(form.materiaprima.data).capitalize(),
+            cantidad = 0,
+            unidad = str(form.unidad.data).capitalize()
+        )
+        models.db.session.add(nueva_materia)
+        models.db.session.commit()
+        return redirect(url_for('carta'))
+    return render_template('cargar_materiaprima.html',form=form)
+
+@app.route('/carta/facturar',methods=["POST","GET"])
+def facturar():
+    total=0
+    uni=dict()
+    productos = request.args.get("productos").split(',')
+    unidades = request.args.get("unidades").split(";")
+    unidades.remove('')
+    productos.remove('')
+    for i in unidades:
+        key , val = i.split(":")
+        uni[int(key)] = int(val)
+
+    productos_a_facturar=models.ProductoElaborado.query.filter(models.ProductoElaborado.id.in_(productos)).all()
+    for i in productos_a_facturar:
+        total=total+(i.precio * uni[i.id])
+    fecha = datetime.now()
+    return render_template("facturar2.html",productos_a_facturar=productos_a_facturar,unidad=uni,total=total,fecha=fecha)
 
 @app.errorhandler(401)
 def custom_401(error):
