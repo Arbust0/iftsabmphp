@@ -141,5 +141,18 @@ class MateriaPrima(db.Model):
         materiaprima = MateriaPrima.query.order_by(MateriaPrima.id.asc()).all()
         return materiaprima
 
+class Factura(db.Model):
+    __tablename__='factura'
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    fecha =db.Column(db.DateTime,nullable=False)
+
+class DetalleFactura(db.Model):
+    __tablename__='detallefactura'
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    factura  = db.Column(db.Integer,ForeignKey('factura.id'))
+    producto = db.Column(db.Integer,ForeignKey('productoelaborado.id'))
+    cantidad = db.Column(db.Integer,nullable=False)
+    precio   = db.Column(db.Float)
+
 if __name__ == '__main__':
     manager.run()
