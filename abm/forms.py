@@ -1,6 +1,6 @@
 from wtforms import Form, validators, StringField, \
                     PasswordField, SubmitField,\
-                    DateField, SelectField,IntegerField
+                    DateField, SelectField,IntegerField,FloatField
 
 
 class LoginForm(Form):
@@ -48,9 +48,10 @@ class CargarProvedor(Form):
         validators.required(message='* requerido')])
 
 class CargarStock(Form):
-    nombre = SelectField('Seleccione un provedor', coerce=int)
-    cantidad = StringField('Cantidad', [
-        validators.required(message='* requerido')])
+
+    cantidad = FloatField('Cantidad', [
+        validators.required(message='* requerido'),
+        validators.NumberRange(min=0)])
 
 class productoListForm(Form):
     productos_list = SelectField('Seleccione un prroducto', coerce=int)
@@ -65,8 +66,9 @@ class CargarCarta(Form):
 
 class CargarReceta(Form):
     materiaprima = SelectField('Seleccione un prroducto', coerce=int)
-    cantidad = IntegerField('cantidad', [
-        validators.required(message='* requerido')])
+    cantidad = FloatField('cantidad', [
+        validators.required(message='* requerido'),
+        validators.NumberRange(min=0)])
 class CargarMateriaPrima(Form):
     materiaprima = StringField('Materia Prima',[
         validators.required(message= '* requerido')

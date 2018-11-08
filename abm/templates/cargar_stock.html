@@ -5,16 +5,19 @@
 <section id="wrapper" class="login-register">
     <div class="login-box login-sidebar">
         <div class="white-box">
-            <form class="form-horizontal form-material" id="stockform" action="{{ url_for('cargar_stock') }}" method="POST">
+            <form class="form-horizontal form-material" id="stockform" action="{{ url_for('cargar_stock',id_materia=materia.id) }}" method="POST">
                              
                 <div class="form-group m-t-20">
-                    <div class="col-xs-12">
-                        {{render_field(form.nombre, class="form-control", placeholder="Nombre")}}
+                    <div class="col-xs-12 text-center">
+                        {{ materia.nombre }}
                     </div>
                 </div>
                 <div class="form-group ">
-                    <div class="col-xs-12">
+                    <div class="col-xs-8">
                         {{render_field(form.cantidad, class="form-control", placeholder="Cantidad")}}
+                    </div>
+                    <div class="col-xs-4">
+                        {{ materia.unidad }}
                     </div>
                 </div>
 				<div class="form-group text-center m-t-20">

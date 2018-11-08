@@ -338,63 +338,52 @@ def modificar_provedor(id_provedor):
 
 #-----------FIN PROVEDORES---------------
 
-@app.route('/cargar-stock', methods=['GET', 'POST'])
-def cargar_stock():
+@app.route('/cargar-stock/<int:id_materia>', methods=['GET', 'POST'])
+def cargar_stock(id_materia):
     """
         carga stock
+        el stock se suma al que ya habia
        
     """
-    provedores=models.Provedor.query.order_by(models.Provedor.id.asc()).all()
+    materia=models.MateriaPrima.query.get(id_materia)
     form = forms.CargarStock(request.form)
-    form.nombre.choices = [
-        (provedor.id, provedor.nombre)
-        for provedor in provedores]
+  
 
     if request.method == 'POST' and form.validate():
-        #verificar si ya esta el stock 
         #res=models.db.session.query(models.Producto.nombre,models.Producto.provedor,models.Producto.cantidad,models.Provedor.id).join(models.Provedor,models.Provedor.id=models.Producto.provedor).filter(
+         
          #   models.Producto.nombre==form.nombre.data).count()
-        if not res==0:
-            '''
-            si esta aca se actualiza
-            suma res.cantidad a la cantidad
-            '''
-            res.cantidad=res.cantidad+form.cantidad.data
-            models.db.session.commit()
-            return redirect(url_for('cargar_stock'))
-        nuevo_stock=models.Producto(
-            producto = str(form.nombre.data).capitalize(),
-            cantidad = form.cantidad.data,
-            provedor = request.form['idprovedor'],
-           )
-        models.db.session.add(nuevo_stock)
+        #res=models.MateriaPrima.query.filter_by(id=form.nombre.data).first()
+       
+        materia.cantidad=materia.cantidad+form.cantidad.data
         models.db.session.commit()
-        return redirect(url_for('cargar_stock'))
-    return render_template("cargar_stock.html",form=form,provedores=provedores)
+        return redirect(url_for('ver_stock'))
+       
+    return render_template("cargar_stock.html",form=form,materia=materia)
 
 @app.route('/stock', methods=['GET', 'POST'])
 def ver_stock():
     materiaprima = models.MateriaPrima.listar()
     return render_template('stock.html',materiaprima=materiaprima)
 
-@app.route('/productos',methods=['POST','GET'])
-def descontar():
-    form = forms.productoListForm(request.form)
-    productos = models.ProductoElaborado.query.all()
+# @app.route('/productos',methods=['POST','GET'])
+# def descontar():
+#     form = forms.productoListForm(request.form)
+#     productos = models.ProductoElaborado.query.all()
 
-    form.productos_list.choices = [
-        (producto.id, producto.nombre)
-        for producto in productos]
+#     form.productos_list.choices = [
+#         (producto.id, producto.nombre)
+#         for producto in productos]
 
-    if request.method =='POST':
-        productoelaborado=form.productos_list.data
-        receta = models.db.session.query(models.Receta).filter(productoelaborado==productoelaborado).all()
-        for materia in receta:
-            mat=models.db.session.query(models.MateriaPrima).filter_by(id=materia.materiaprima).first()
-            mat.cantidad = mat.cantidad - materia.cantidad
-            models.db.session.commit()
-        return redirect(url_for('descontar'))
-    return render_template('productos.html',form=form)
+#     if request.method =='POST':
+#         productoelaborado=form.productos_list.data
+#         receta = models.db.session.query(models.Receta).filter(productoelaborado==productoelaborado).all()
+#         for materia in receta:
+#             mat=models.db.session.query(models.MateriaPrima).filter_by(id=materia.materiaprima).first()
+#             mat.cantidad = mat.cantidad - materia.cantidad
+#             models.db.session.commit()
+#         return redirect(url_for('descontar'))
+#     return render_template('productos.html',form=form)
 
 @app.route('/carta',methods=['POST','GET'])
 def carta():
@@ -487,8 +476,11 @@ def agregar_materia_prima():
         )
         models.db.session.add(nueva_materia)
         models.db.session.commit()
-        return redirect(url_for('carta'))
+        return redirect(url_for('ver_stock'))
     return render_template('cargar_materiaprima.html',form=form)
+
+
+
 
 @app.route('/carta/facturar',methods=["POST","GET"])
 def facturar():
@@ -506,7 +498,47 @@ def facturar():
     for i in productos_a_facturar:
         total=total+(i.precio * uni[i.id])
     fecha = datetime.now()
+    if request.method=="POST":
+        factura = models.Factura(
+            fecha=fecha
+        )
+        models.db.session.add(factura)
+        models.db.session.commit()
+        factura=models.Factura.query.order_by(models.Factura.id.desc()).first()
+   
+        for producto in productos_a_facturar:
+            receta = models.db.session.query(models.Receta).filter(models.Receta.productoelaborado==producto.id).all()
+            if len(receta) == 0:
+                return  "<script> alert('el producto no tiene receta');location.href ='/carta';</script>"
+            for materia in receta:
+                mat=models.db.session.query(models.MateriaPrima).filter_by(id=materia.materiaprima).first()
+                mat.cantidad = mat.cantidad - (materia.cantidad*uni[producto.id])
+                models.db.session.commit()
+            detalle_factura = models.DetalleFactura(
+                factura=factura.id,
+                producto = producto.id,
+                cantidad = uni[producto.id],
+                precio   = producto.precio
+            )
+            models.db.session.add(detalle_factura)
+            models.db.session.commit()
+        return "<script> alert('Se Facturo correctamente');location.href ='/carta';</script>"
     return render_template("facturar2.html",productos_a_facturar=productos_a_facturar,unidad=uni,total=total,fecha=fecha)
+
+# @app.route('/receta/<int:id_producto>/ver',methods=["POST","GET"])
+# def ver_receta(id_producto):
+#     receta=models.db.session.query(models.MateriaPrima.nombre,
+#         models.MateriaPrima.unidad,
+#         models.Receta.cantidad,
+#         models.Receta.productoelaborado,
+#         models.Receta.materiaprima,
+#         models.ProductoElaborado.nombre,
+#         models.ProductoElaborado.id).join(
+#             models.Receta, models.Receta.productoelaborado==models.ProductoElaborado.id).filter(
+#             models.Receta.productoelaborado==id_producto)
+#     for i in receta:
+#         print(i.materiaprima_nombre)
+#     return("hola mundo")
 
 @app.errorhandler(401)
 def custom_401(error):
