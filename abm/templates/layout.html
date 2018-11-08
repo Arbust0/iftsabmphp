@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8">
@@ -36,6 +36,8 @@
                 {% else %}
                 <li><a href="{{ url_for('task_list') }}">Tareas</a></li>
                 {% endif %}
+                
+                {% if current_user.username %}
                 {% if request.path == '/cargar-provedor' %}
                 <li class="active"><a href="{{ url_for('cargar_provedor') }}">Cargar Provedores</a></li>
                 {% else %}
@@ -46,7 +48,27 @@
                 {% else %}
                 <li><a href="{{ url_for('ver_provedores') }}">Ver Provedores</a></li>
                 {% endif %}
-                {% if current_user.username %}
+                {% if request.path == '/carta' %}
+                <li class="active"><a href="{{ url_for('carta') }}">Carta</a></li>
+                {% else %}
+                <li><a href="{{ url_for('carta') }}">Carta</a></li>
+                {% endif %}
+                {% if request.path == '/carta/agregar' %}
+                <li class="active"><a href="{{ url_for('agregar_carta') }}">Agregar Carta</a></li>
+                {% else %}
+                <li><a href="{{ url_for('agregar_carta') }}">Agregar Carta</a></li>
+                {% endif %}
+                {% if request.path == '/stock' %}
+                <li class="active"><a href="{{ url_for('ver_stock') }}">Stock</a></li>
+                {% else %}
+                <li><a href="{{ url_for('ver_stock') }}">Stock</a></li>
+                {% endif %}
+                {% if request.path == '/materia_prima/agregar' %}
+                <li class="active"><a href="{{ url_for('agregar_materia_prima') }}">Agregar materia Prima</a></li>
+                {% else %}
+                <li><a href="{{ url_for('agregar_materia_prima') }}">Agregar materia Prima</a></li>
+                {% endif %}
+                
                 <li><a href="{{ url_for('logout') }}">Logout</a></li>
 
                 {% if request.path == '/' + current_user.username + '/perfil' %}
