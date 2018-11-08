@@ -229,6 +229,7 @@ def login():
 
 
 @app.route('/registro', methods=['GET', 'POST'])
+@login_required
 def registry():
     """
     La funcion de registro, aca cargamos el registryform
@@ -282,7 +283,9 @@ def logout():
     logout_user()
     return redirect(url_for('home'))
 #-------PROVEDORES----------------
+
 @app.route('/cargar-provedor', methods=['GET', 'POST'])
+@login_required
 def cargar_provedor():
     """
         carga provedores
@@ -306,7 +309,9 @@ def cargar_provedor():
         return redirect(url_for('cargar_provedor'))
     return render_template("cargar_provedor.html",form=form)
 
+
 @app.route('/provedores',methods=['GET','POST'])
+@login_required
 def ver_provedores():
     """
         lista todos los provedores
@@ -314,7 +319,9 @@ def ver_provedores():
     provedores=models.Provedor.query.order_by(models.Provedor.id.asc()).all()
     return render_template("provedores.html",provedores=provedores)
 
+
 @app.route('/provedor/<int:id_provedor>/editar',methods=['GET','POST'])
+@login_required
 def modificar_provedor(id_provedor):
     """
         Modifica los provedores
@@ -338,7 +345,9 @@ def modificar_provedor(id_provedor):
 
 #-----------FIN PROVEDORES---------------
 
+
 @app.route('/cargar-stock/<int:id_materia>', methods=['GET', 'POST'])
+@login_required
 def cargar_stock(id_materia):
     """
         carga stock
@@ -361,7 +370,9 @@ def cargar_stock(id_materia):
        
     return render_template("cargar_stock.html",form=form,materia=materia)
 
+
 @app.route('/stock', methods=['GET', 'POST'])
+@login_required
 def ver_stock():
     materiaprima = models.MateriaPrima.listar()
     return render_template('stock.html',materiaprima=materiaprima)
@@ -385,7 +396,9 @@ def ver_stock():
 #         return redirect(url_for('descontar'))
 #     return render_template('productos.html',form=form)
 
+
 @app.route('/carta',methods=['POST','GET'])
+@login_required
 def carta():
     productos=''
     unidad=''
@@ -400,7 +413,9 @@ def carta():
             return redirect(url_for('facturar',productos=productos,unidades=unidad))               
     return render_template('carta.html',productos=carta)
 
+
 @app.route('/carta/<int:id_carta>/editar',methods=['GET','POST'])
+@login_required
 def modificar_carta(id_carta):
     """
         Modifica la Carta
@@ -420,7 +435,9 @@ def modificar_carta(id_carta):
 
     return render_template('cargar_carta.html',form=form,producto=str(id_carta))
 
+
 @app.route('/carta/agregar',methods=["POST","GET"])
+@login_required
 def agregar_carta():
     form = forms.CargarCarta(request.form)
     
@@ -437,7 +454,9 @@ def agregar_carta():
         return redirect(url_for('carta'))
     return render_template("cargar_carta.html",form=form)
 
+
 @app.route('/receta/<int:id>/agregar',methods=["POST","GET"])
+@login_required
 def agregar_receta(id):
     form = forms.CargarReceta(request.form)
     productoelaborado = models.ProductoElaborado.query.get(id)
@@ -461,7 +480,9 @@ def agregar_receta(id):
 
     return render_template('cargar_receta.html',form=form,productoelaborado=productoelaborado)
 
+
 @app.route('/materia_prima/agregar',methods=["POST","GET"])
+@login_required
 def agregar_materia_prima():
     
     form = forms.CargarMateriaPrima(request.form)
@@ -481,8 +502,8 @@ def agregar_materia_prima():
 
 
 
-
 @app.route('/carta/facturar',methods=["POST","GET"])
+@login_required
 def facturar():
     total=0
     uni=dict()
