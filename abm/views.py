@@ -534,7 +534,10 @@ def facturar():
             for materia in receta:
                 mat=models.db.session.query(models.MateriaPrima).filter_by(id=materia.materiaprima).first()
                 mat.cantidad = mat.cantidad - (materia.cantidad*uni[producto.id])
-                models.db.session.commit()
+                if mat.cantidad < 0:
+                    mensaje = "<script> alert('el producto "+mat.nombre+" no tiene stock suficiente');location.href ='/carta';</script>"
+                    return mensaje
+            models.db.session.commit()
             detalle_factura = models.DetalleFactura(
                 factura=factura.id,
                 producto = producto.id,
